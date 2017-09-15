@@ -21,5 +21,15 @@
   "bugs": {
     "url": "https://github.com/ricardonunesdev/aws-ec2-wrap/issues"
   },
-  "homepage": "https://github.com/ricardonunesdev/aws-ec2-wrap#readme"
+  "homepage": "https://github.com/ricardonunesdev/aws-ec2-wrap#readme",
+  "dependencies": {
+    "aws-sdk": "^2.116.0",
+    "bluebird": "^3.5.0"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "coveralls": "^2.13.1",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.5.3"
+  }
 }
