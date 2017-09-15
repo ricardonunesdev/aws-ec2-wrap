@@ -16,7 +16,8 @@
   "license": "MIT",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --reporter spec --recursive --timeout 30000"
+    "test": "mocha --reporter spec --recursive --timeout 30000",
+    "cover": "node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- -R spec -t 30000 test/*"
   },
   "dependencies": {
     "aws-sdk": "^2.116.0",
