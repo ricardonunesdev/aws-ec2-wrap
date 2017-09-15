@@ -14,6 +14,11 @@ const checkInitialized = () => {
     }
 };
 
+/**
+ * Checks if the region is valid for EC2
+ * @param {string} region
+ * @return {boolean} True if region is valid, false otherwise
+ */
 const isValidRegion = (region) => {
     return (validRegions.indexOf(region) !== -1);
 };
