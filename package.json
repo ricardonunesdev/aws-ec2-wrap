@@ -1,0 +1,25 @@
+{
+  "name": "aws-ec2-wrap",
+  "version": "0.0.1",
+  "description": "Simplified AWS EC2 wrapper written in Node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ricardonunesdev/aws-ec2-wrap.git"
+  },
+  "keywords": [
+    "nodejs",
+    "aws",
+    "ec2",
+    "wrapper"
+  ],
+  "author": "Ricardo Nunes <ricardonunesdev@gmail.com> (https://github.com/ricardonunesdev)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ricardonunesdev/aws-ec2-wrap/issues"
+  },
+  "homepage": "https://github.com/ricardonunesdev/aws-ec2-wrap#readme"
+}
