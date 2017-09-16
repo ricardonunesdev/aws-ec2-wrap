@@ -24,7 +24,8 @@
   },
   "dependencies": {
     "aws-sdk": "^2.116.0",
-    "bluebird": "^3.5.0"
+    "bluebird": "^3.5.0",
+    "is-ip": "^2.0.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",
