@@ -24,12 +24,12 @@ describe('Testing AWS EC2 Wrapper', () => {
 
     });
 
-    describe('Testing EC2.describeInstances()', () => {
+    describe('Testing EC2.getAllInstances()', () => {
 
         it('should return a list of instances', (done) => {
             EC2.init('eu-west-1');
 
-            EC2.describeInstances()
+            EC2.getAllInstances()
                 .then((instances) => {
                     expect(instances).to.be.an('array');
                     done();
