@@ -24,18 +24,14 @@ describe('Testing AWS EC2 Wrapper', () => {
 
     });
 
-    describe('Testing EC2.getInstances()', () => {
+    describe('Testing EC2.describeInstances()', () => {
 
         it('should return a list of instances', (done) => {
             EC2.init('eu-west-1');
 
-            EC2.getInstances()
-                .then((res) => {
-                    expect(res).to.be.an('object');
-                    expect(res).to.have.property('success');
-                    expect(res.success).to.be.equal(true);
-                    expect(res).to.have.property('instances');
-                    expect(res.instances).to.be.an('array');
+            EC2.describeInstances()
+                .then((instances) => {
+                    expect(instances).to.be.an('array');
                     done();
                 })
                 .catch(done);
