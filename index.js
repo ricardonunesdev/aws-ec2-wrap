@@ -11,7 +11,7 @@ const latestApiVersion = '2016-11-15';
 let EC2 = null;
 
 /**
- * Checks if the EC2 connection has been initialized.
+ * Check if the EC2 connection has been initialized.
  */
 const checkInitialized = () => {
     if (EC2 === null) {
@@ -20,7 +20,7 @@ const checkInitialized = () => {
 };
 
 /**
- * Checks if the region is valid for EC2
+ * Check if the region is valid for EC2
  * @param {string} region The region to validate
  */
 const checkValidRegion = (region) => {
@@ -30,7 +30,7 @@ const checkValidRegion = (region) => {
 };
 
 /**
- * Checks if the ip address is valid
+ * Check if the ip address is valid
  * @param {string} ipAddress The ip address to validate
  */
 const checkValidIpAddress = (ipAddress) => {
@@ -40,7 +40,7 @@ const checkValidIpAddress = (ipAddress) => {
 }
 
 /**
- * Initializes the EC2 connection and sets the AWS region.
+ * Initialize the EC2 connection and sets the AWS region.
  * @param {string} region The AWS region you want to interact with (example: 'us-west-1').
  */
 const init = (region) => {
@@ -51,7 +51,7 @@ const init = (region) => {
 };
 
 /**
- * Gets the currently selected AWS region.
+ * Get the currently selected AWS region.
  * @return {string} The name of the AWS region
  */
 const getRegion = () => {
@@ -61,7 +61,7 @@ const getRegion = () => {
 };
 
 /**
- * Gets all of your instances.
+ * Get all instances.
  */
 const getAllInstances = () => {
     checkInitialized();
@@ -89,7 +89,10 @@ const getAllInstances = () => {
     });
 };
 
-// Get instance by ip address
+/**
+ * Get an instance by ip address.
+ * @param {string} ipAddress The ip address of the instance
+ */
 const getInstanceByIpAddress = (ipAddress) => {
     checkInitialized();
     checkValidIpAddress(ipAddress);
@@ -105,10 +108,12 @@ const getInstanceByIpAddress = (ipAddress) => {
                 return reject(error);
             }
 
-            let instance = {};
+            let instance;
 
             if ((data.Reservations.length > 0) && (data.Reservations[0].Instances.length > 0)) {
                 instance = data.Reservations[0].Instances[0];
+            } else {
+                instance = {};
             }
 
             return resolve(instance);
@@ -116,7 +121,37 @@ const getInstanceByIpAddress = (ipAddress) => {
     });
 };
 
-// Get instance by instance id
+/**
+ * Get an instance by id.
+ * @param {string} instanceId The id of the instance
+ */
+const getInstanceByInstanceId = (instanceId) => {
+    checkInitialized();
+
+    return new Promise((resolve, reject) => {
+        let params = {
+            DryRun: false,
+            Filters: [ { Name: 'instance-id', Values: [ instanceId ] } ]
+        };
+
+        EC2.describeInstances(params, (error, data) => {
+            if (error) {
+                return reject(error);
+            }
+
+            let instance;
+
+            if ((data.Reservations.length > 0) && (data.Reservations[0].Instances.length > 0)) {
+                instance = data.Reservations[0].Instances[0];
+            } else {
+                instance = {};
+            }
+
+            return resolve(instance);
+        });
+    });
+};
+
 // Get instances by instance state
 
 /**
@@ -154,6 +189,7 @@ module.exports = {
 
     getAllInstances: getAllInstances,
     getInstanceByIpAddress: getInstanceByIpAddress,
+    getInstanceByInstanceId: getInstanceByInstanceId,
 
     validRegions: validRegions,
     errors: errors
