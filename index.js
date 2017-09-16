@@ -47,7 +47,10 @@ const getRegion = () => {
     return EC2.config.region;
 };
 
-const getInstances = () => {
+/**
+ * Describes one or more of your instances.
+ */
+const describeInstances = () => {
     checkInitialized();
 
     return new Promise((resolve, reject) => {
@@ -60,20 +63,17 @@ const getInstances = () => {
                 return reject(error);
             }
 
-            let res = {
-                success: true,
-                instances: []
-            };
+            let instances = [];
 
             data.Reservations.forEach((reservation) => {
                 reservation.Instances.forEach((instance) => {
-                    res.instances.push(instance);
+                    instances.push(instance);
                 });
             });
 
-            console.log(res);
+            console.log('Found '+instances.length+' instances');
 
-            return resolve(res);
+            return resolve(instances);
         });
     });
 };
@@ -113,7 +113,7 @@ const errors = {
 module.exports = {
     init: init,
     getRegion: getRegion,
-    getInstances: getInstances,
+    describeInstances: describeInstances,
 
     validRegions: validRegions,
     errors: errors
