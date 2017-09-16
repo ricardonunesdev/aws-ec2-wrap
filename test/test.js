@@ -41,12 +41,51 @@ describe('AWS EC2 Wrapper', () => {
             expect(() => { EC2.getInstanceByIpAddress('1.2.3'); }).to.throw(EC2.errors.INVALID_IP);
         });
 
-        it('should return the instance if found', (done) => {
+        it('should return an empty object', (done) => {
             EC2.init('eu-west-1');
 
-            EC2.getInstanceByIpAddress(process.env.IP_ADDRESS || '1.2.3.4')
+            EC2.getInstanceByIpAddress('1.2.3.4')
                 .then((instance) => {
                     expect(instance).to.be.an('object');
+                    expect(instance).to.be.empty;
+                    done();
+                })
+                .catch(done);
+        });
+
+        it('should return the instance', (done) => {
+            EC2.init('eu-west-1');
+
+            EC2.getInstanceByIpAddress(process.env.IP_ADDRESS)
+                .then((instance) => {
+                    expect(instance).to.be.an('object');
+                    expect(instance).to.not.be.empty;
+                    done();
+                })
+                .catch(done);
+        });
+    });
+
+    describe('EC2.getInstanceByInstanceId()', () => {
+        it('should return the instance', (done) => {
+            EC2.init('eu-west-1');
+
+            EC2.getInstanceByInstanceId('')
+                .then((instance) => {
+                    expect(instance).to.be.an('object');
+                    expect(instance).to.be.empty;
+                    done();
+                })
+                .catch(done);
+        });
+
+        it('should return the instance', (done) => {
+            EC2.init('eu-west-1');
+
+            EC2.getInstanceByInstanceId(process.env.INSTANCE_ID)
+                .then((instance) => {
+                    expect(instance).to.be.an('object');
+                    expect(instance).to.not.be.empty;
                     done();
                 })
                 .catch(done);
