@@ -2,6 +2,7 @@
 
 const Promise = require('bluebird');
 const AWS = require('aws-sdk');
+const isIp = require('is-ip');
 
 const latestApiVersion = '2016-11-15';
 
@@ -25,6 +26,16 @@ const checkValidRegion = (region) => {
         throw new Error(errors.INVALID_REGION);
     }
 };
+
+/**
+ * Checks if the ip address is valid
+ * @param {string} ipAddress The ip address to validate
+ */
+const checkValidIpAddress = (ipAddress) => {
+    if (!isIp.v4(ipAddress)) {
+        throw new Error(errors.INVALID_IP);
+    }
+}
 
 /**
  * Initializes the EC2 connection and sets the AWS region.
@@ -71,16 +82,40 @@ const getAllInstances = () => {
                 });
             });
 
-            console.log('Found '+instances.length+' instances');
-
             return resolve(instances);
         });
     });
 };
 
 // Get instance by ip address
+const getInstanceByIpAddress = (ipAddress) => {
+    checkInitialized();
+    checkValidIpAddress(ipAddress);
+
+    return new Promise((resolve, reject) => {
+        let params = {
+            DryRun: false,
+            Filters: [ { Name: 'ip-address', Values: [ ipAddress ] } ]
+        };
+
+        EC2.describeInstances(params, (error, data) => {
+            if (error) {
+                return reject(error);
+            }
+
+            let instance = {};
+
+            if ((data.Reservations.length > 0) && (data.Reservations[0].Instances.length > 0)) {
+                instance = data.Reservations[0].Instances[0];
+            }
+
+            return resolve(instance);
+        });
+    });
+};
+
 // Get instance by instance id
-// Get instaces by instance state
+// Get instances by instance state
 
 /**
  * Valid AWS regions for EC2.
@@ -106,8 +141,9 @@ const validRegions = [
  * Common error list.
  */
 const errors = {
-    NOT_INITIALIZED: 'EC2 not initialized. Please call EC2.init() with a valid region',
-    INVALID_REGION: 'Region is invalid. Please check valid regions for EC2 here - http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region'
+    NOT_INITIALIZED: 'EC2 not initialized. Please call EC2.init() with a valid region.',
+    INVALID_REGION: 'Region is invalid. Please check the valid regions for EC2 @ http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region.',
+    INVALID_IP: 'IP address is invalid. Please insert a valid IPv4 address.'
 };
 
 module.exports = {
@@ -115,6 +151,7 @@ module.exports = {
     getRegion: getRegion,
 
     getAllInstances: getAllInstances,
+    getInstanceByIpAddress: getInstanceByIpAddress,
 
     validRegions: validRegions,
     errors: errors
