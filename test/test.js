@@ -17,9 +17,28 @@ describe('Testing AWS EC2 Wrapper', () => {
         });
 
         it('should return the correct region', () => {
-            EC2.init('us-west-1');
+            EC2.init('eu-west-1');
             let res = EC2.getRegion();
-            expect(res).to.be.equal('us-west-1');
+            expect(res).to.be.equal('eu-west-1');
+        });
+
+    });
+
+    describe('Testing EC2.getInstances()', () => {
+
+        it('should return a list of instances', (done) => {
+            EC2.init('eu-west-1');
+
+            EC2.getInstances()
+                .then((res) => {
+                    expect(res).to.be.an('object');
+                    expect(res).to.have.property('success');
+                    expect(res.success).to.be.equal(true);
+                    expect(res).to.have.property('instances');
+                    expect(res.instances).to.be.an('array');
+                    done();
+                })
+                .catch(done);
         });
 
     });
