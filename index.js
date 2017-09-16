@@ -3,6 +3,8 @@
 const Promise = require('bluebird');
 const AWS = require('aws-sdk');
 
+const latestApiVersion = '2016-11-15';
+
 let EC2 = null;
 
 /**
@@ -16,11 +18,12 @@ const checkInitialized = () => {
 
 /**
  * Checks if the region is valid for EC2
- * @param {string} region
- * @return {boolean} True if region is valid, false otherwise
+ * @param {string} region The region to validate
  */
-const isValidRegion = (region) => {
-    return (validRegions.indexOf(region) !== -1);
+const checkValidRegion = (region) => {
+    if (validRegions.indexOf(region) === -1) {
+        throw new Error(errors.INVALID_REGION);
+    }
 };
 
 /**
@@ -28,12 +31,10 @@ const isValidRegion = (region) => {
  * @param {string} region The AWS region you want to interact with (example: 'us-west-1').
  */
 const init = (region) => {
-    if (isValidRegion(region)) {
-        AWS.config.region = region;
-        EC2 = new AWS.EC2();
-    } else {
-        throw new Error(errors.INVALID_REGION);
-    }
+    checkValidRegion(region);
+
+    AWS.config.region = region;
+    EC2 = new AWS.EC2();
 };
 
 /**
@@ -42,8 +43,44 @@ const init = (region) => {
  */
 const getRegion = () => {
     checkInitialized();
+
     return EC2.config.region;
-}
+};
+
+const getInstances = () => {
+    checkInitialized();
+
+    return new Promise((resolve, reject) => {
+        let params = {
+            DryRun: false
+        };
+
+        EC2.describeInstances(params, (error, data) => {
+            if (error) {
+                return reject(error);
+            }
+
+            let res = {
+                success: true,
+                instances: []
+            };
+
+            data.Reservations.forEach((reservation) => {
+                reservation.Instances.forEach((instance) => {
+                    res.instances.push(instance);
+                });
+            });
+
+            console.log(res);
+
+            return resolve(res);
+        });
+    });
+};
+
+// Get instance by ip address
+// Get instance by instance id
+// Get instaces by instance state
 
 /**
  * Valid AWS regions for EC2.
@@ -76,6 +113,7 @@ const errors = {
 module.exports = {
     init: init,
     getRegion: getRegion,
+    getInstances: getInstances,
 
     validRegions: validRegions,
     errors: errors
