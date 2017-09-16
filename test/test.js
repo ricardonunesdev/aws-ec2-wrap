@@ -4,10 +4,9 @@ const expect = require('chai').expect;
 
 const EC2 = require('../');
 
-describe('Testing AWS EC2 Wrapper', () => {
+describe('AWS EC2 Wrapper', () => {
 
-    describe('Testing EC2.getRegion()', () => {
-
+    describe('EC2 connection and EC2.getRegion()', () => {
         it('should return error if EC2 connection hasn\'t been initialized', () => {
             expect(() => { EC2.getRegion(); }).to.throw(EC2.errors.NOT_INITIALIZED);
         });
@@ -21,12 +20,10 @@ describe('Testing AWS EC2 Wrapper', () => {
             let res = EC2.getRegion();
             expect(res).to.be.equal('eu-west-1');
         });
-
     });
 
-    describe('Testing EC2.getAllInstances()', () => {
-
-        it('should return a list of instances', (done) => {
+    describe('EC2.getAllInstances()', () => {
+        it('should return an array of instances', (done) => {
             EC2.init('eu-west-1');
 
             EC2.getAllInstances()
@@ -36,7 +33,25 @@ describe('Testing AWS EC2 Wrapper', () => {
                 })
                 .catch(done);
         });
+    });
 
+    describe('EC2.getInstanceByIpAddress()', () => {
+        it('should return error if ip address is invalid', () => {
+            EC2.init('eu-west-1');
+            expect(() => { EC2.getInstanceByIpAddress('1.2.3'); }).to.throw(EC2.errors.INVALID_IP);
+        });
+
+        it('should return the instance if found', (done) => {
+            EC2.init('eu-west-1');
+
+            EC2.getInstanceByIpAddress(process.env.IP_ADDRESS || '1.2.3.4')
+                .then((instance) => {
+                    console.log(instance)
+                    expect(instance).to.be.an('object');
+                    done();
+                })
+                .catch(done);
+        });
     });
 
 });
