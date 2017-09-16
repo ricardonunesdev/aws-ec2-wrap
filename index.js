@@ -48,9 +48,9 @@ const getRegion = () => {
 };
 
 /**
- * Describes one or more of your instances.
+ * Gets all of your instances.
  */
-const describeInstances = () => {
+const getAllInstances = () => {
     checkInitialized();
 
     return new Promise((resolve, reject) => {
@@ -113,7 +113,8 @@ const errors = {
 module.exports = {
     init: init,
     getRegion: getRegion,
-    describeInstances: describeInstances,
+
+    getAllInstances: getAllInstances,
 
     validRegions: validRegions,
     errors: errors
