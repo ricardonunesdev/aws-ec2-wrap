@@ -46,7 +46,6 @@ describe('AWS EC2 Wrapper', () => {
 
             EC2.getInstanceByIpAddress(process.env.IP_ADDRESS || '1.2.3.4')
                 .then((instance) => {
-                    console.log(instance)
                     expect(instance).to.be.an('object');
                     done();
                 })
