@@ -1,5 +1,7 @@
 'use strict';
 
+require('dotenv').config();
+
 const Promise = require('bluebird');
 const AWS = require('aws-sdk');
 const isIp = require('is-ip');
