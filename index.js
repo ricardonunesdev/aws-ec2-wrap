@@ -22,7 +22,7 @@ const checkInitialized = () => {
 };
 
 /**
- * Check if the region is valid for EC2
+ * Check if the region is valid for EC2.
  * @param {string} region The region to validate
  */
 const checkValidRegion = (region) => {
@@ -34,7 +34,7 @@ const checkValidRegion = (region) => {
 };
 
 /**
- * Check if the ip address is valid
+ * Check if the ip address is valid.
  * @param {string} ipAddress The ip address to validate
  */
 const checkValidIpAddress = (ipAddress) => {
@@ -45,6 +45,10 @@ const checkValidIpAddress = (ipAddress) => {
     }
 }
 
+/**
+ * Check if the state is valid.
+ * @param {string} state The state to validate
+ */
 const checkValidState = (state) => {
     checkNotEmpty(state);
 
@@ -53,6 +57,10 @@ const checkValidState = (state) => {
     }
 };
 
+/**
+ * Check if the value is empty
+ * @param {*} value The value to validate
+ */
 const checkNotEmpty = (value) => {
     if ((typeof value === 'undefined') ||
         (value === null) ||
