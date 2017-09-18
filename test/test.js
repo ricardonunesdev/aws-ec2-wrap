@@ -253,7 +253,7 @@ describe('AWS EC2 Wrapper', () => {
                 });
         });
 
-        it('should return the status of the instance', (done) => {
+        it('should stop the instance and return the status', (done) => {
             EC2.stopInstance(process.env.TEST_INSTANCE_ID_2)
                 .then((instanceStatus) => {
                     expect(instanceStatus).to.be.an('object');
@@ -267,5 +267,41 @@ describe('AWS EC2 Wrapper', () => {
         });
 
     });
+
+        describe('EC2.startInstance()', () => {
+
+            before(() => {
+                EC2.init('eu-west-1');
+            });
+
+            it('should throw error if instance id is empty', () => {
+                expect(() => { EC2.startInstance(''); }).to.throw(EC2.errors.EMPTY_VALUE);
+            });
+
+            it('should throw error if instance id is invalid', (done) => {
+                EC2.startInstance('abc')
+                    .then((instance) => {
+                        done('Expected to fail');
+                    })
+                    .catch((error) => {
+                        expect(error.code).to.be.equal('InvalidInstanceID.Malformed');
+                        done();
+                    });
+            });
+
+            it('should start the instance and return the status', (done) => {
+                EC2.startInstance(process.env.TEST_INSTANCE_ID_1)
+                    .then((instanceStatus) => {
+                        expect(instanceStatus).to.be.an('object');
+                        expect(instanceStatus).to.have.property('previous');
+                        expect(instanceStatus.previous).to.be.a('string');
+                        expect(instanceStatus).to.have.property('current');
+                        expect(instanceStatus.current).to.be.a('string');
+                        done();
+                    })
+                    .catch(done);
+            });
+
+        });
 
 });
