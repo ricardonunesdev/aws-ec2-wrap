@@ -52,7 +52,6 @@ const checkValidIpAddress = (ipAddress) => {
  */
 const init = (region) => {
     checkValidRegion(region);
-
     AWS.config.region = region;
     EC2 = new AWS.EC2();
 };
@@ -63,7 +62,6 @@ const init = (region) => {
  */
 const getRegion = () => {
     checkInitialized();
-
     return EC2.config.region;
 };
 
@@ -97,7 +95,7 @@ const getAllInstances = () => {
 };
 
 /**
- * Get an instance by ip address.
+ * Get one instance by ip address.
  * @param {string} ipAddress The ip address of the instance
  */
 const getInstanceByIpAddress = (ipAddress) => {
@@ -129,7 +127,7 @@ const getInstanceByIpAddress = (ipAddress) => {
 };
 
 /**
- * Get an instance by id.
+ * Get one instance by id.
  * @param {string} instanceId The id of the instance
  */
 const getInstanceById = (instanceId) => {
@@ -159,7 +157,10 @@ const getInstanceById = (instanceId) => {
     });
 };
 
-// Get instances by instance state
+/**
+ * Get many instances by state.
+ * @param {string} state The state of the instances
+ */
 const getInstancesByState = (state) => {
     checkInitialized();
     checkValidState(state);
