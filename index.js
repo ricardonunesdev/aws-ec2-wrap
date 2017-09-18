@@ -242,12 +242,19 @@ const getInstanceStatus = (instanceId) => {
 
 };
 
-// Launch instance
-const launchInstance = (imageId, instanceType, keyName, securityGroupId, tagName) => {
+/**
+ * Launch instance.
+ * @param {string} imageId The id of the AMI image to use
+ * @param {string} instanceType The instance type
+ * @param {string} keyName The name of the KeyPair to access
+ * @param {string} securityGroupName The name of the security group
+ * @param {string} tagName The name tag you want to apply to the instance
+ */
+const launchInstance = (imageId, instanceType, keyName, securityGroupName, tagName) => {
     checkNotEmpty(imageId);
     checkNotEmpty(instanceType);
     checkNotEmpty(keyName);
-    checkNotEmpty(securityGroupId);
+    checkNotEmpty(securityGroupName);
     checkNotEmpty(tagName);
 
     return new Promise((resolve, reject) => {
@@ -255,7 +262,7 @@ const launchInstance = (imageId, instanceType, keyName, securityGroupId, tagName
             ImageId: imageId,
             InstanceType: instanceType,
             KeyName: keyName,
-            SecurityGroups: [ securityGroupId ],
+            SecurityGroups: [ securityGroupName ],
             MinCount: 1,
             MaxCount: 1
         };
