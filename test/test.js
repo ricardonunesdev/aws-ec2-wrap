@@ -6,19 +6,33 @@ const EC2 = require('../');
 
 describe('AWS EC2 Wrapper', () => {
 
-    describe('EC2 connection and EC2.getRegion()', () => {
-        it('should return error if EC2 connection hasn\'t been initialized', () => {
+    describe('EC2.init()', () => {
+        it('should return error if not initialized', () => {
             expect(() => { EC2.getRegion(); }).to.throw(EC2.errors.NOT_INITIALIZED);
         });
 
-        it('should return error if trying to set an empty EC2 region', () => {
+        it('should return error if empty', () => {
             expect(() => { EC2.init(''); }).to.throw(EC2.errors.EMPTY_VALUE);
         });
 
-        it('should return error if trying to set an invalid EC2 region', () => {
-            expect(() => { EC2.init('abc'); }).to.throw(EC2.errors.INVALID_REGION);
+        it('should return error if undefined', () => {
+            expect(() => { EC2.init(); }).to.throw(EC2.errors.EMPTY_VALUE);
         });
 
+        it('should return error if empty array', () => {
+            expect(() => { EC2.init([]); }).to.throw(EC2.errors.EMPTY_VALUE);
+        });
+
+        it('should return error if empty object', () => {
+            expect(() => { EC2.init({}); }).to.throw(EC2.errors.EMPTY_VALUE);
+        });
+
+        it('should return error if invalid region', () => {
+            expect(() => { EC2.init('abc'); }).to.throw(EC2.errors.INVALID_REGION);
+        });
+    });
+
+    describe('EC2.getRegion()', () => {
         it('should return the correct region', () => {
             EC2.init('eu-west-1');
             let res = EC2.getRegion();
@@ -125,33 +139,33 @@ describe('AWS EC2 Wrapper', () => {
         });
     });
 
-        describe('EC2.getInstanceStatus(instanceId)', () => {
-            it('should return error if instance id is empty', () => {
-                EC2.init('eu-west-1');
-                expect(() => { EC2.getInstanceStatus(''); }).to.throw(EC2.errors.EMPTY_VALUE);
-            });
-
-            it('should return error if instance id is invalid', (done) => {
-                EC2.init('eu-west-1');
-                EC2.getInstanceStatus('abc')
-                    .then((instance) => {
-                        done('Expected to fail');
-                    })
-                    .catch((error) => {
-                        expect(error.code).to.be.equal('InvalidInstanceID.Malformed');
-                        done();
-                    });
-            });
-
-            it('should return the status of the instance with a valid instance id', (done) => {
-                EC2.init('eu-west-1');
-                EC2.getInstanceStatus(process.env.INSTANCE_ID)
-                    .then((instanceStatus) => {
-                        expect(instanceStatus).to.be.equal('running');
-                        done();
-                    })
-                    .catch(done);
-            });
+    describe('EC2.getInstanceStatus(instanceId)', () => {
+        it('should return error if instance id is empty', () => {
+            EC2.init('eu-west-1');
+            expect(() => { EC2.getInstanceStatus(''); }).to.throw(EC2.errors.EMPTY_VALUE);
         });
+
+        it('should return error if instance id is invalid', (done) => {
+            EC2.init('eu-west-1');
+            EC2.getInstanceStatus('abc')
+                .then((instance) => {
+                    done('Expected to fail');
+                })
+                .catch((error) => {
+                    expect(error.code).to.be.equal('InvalidInstanceID.Malformed');
+                    done();
+                });
+        });
+
+        it('should return the status of the instance with a valid instance id', (done) => {
+            EC2.init('eu-west-1');
+            EC2.getInstanceStatus(process.env.INSTANCE_ID)
+                .then((instanceStatus) => {
+                    expect(instanceStatus).to.be.equal('running');
+                    done();
+                })
+                .catch(done);
+        });
+    });
 
 });
