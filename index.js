@@ -242,11 +242,50 @@ const getInstanceStatus = (instanceId) => {
 
 };
 
+// Launch instance
+const launchInstance = (imageId, instanceType, keyName, securityGroupId, tagName) => {
+    checkNotEmpty(imageId);
+    checkNotEmpty(instanceType);
+    checkNotEmpty(keyName);
+    checkNotEmpty(securityGroupId);
+    checkNotEmpty(tagName);
+
+    return new Promise((resolve, reject) => {
+        var params = {
+            ImageId: imageId,
+            InstanceType: instanceType,
+            KeyName: keyName,
+            SecurityGroups: [ securityGroupId ],
+            MinCount: 1,
+            MaxCount: 1
+        };
+
+        EC2.runInstances(params, (error, data) => {
+            if (error) {
+                return reject(error);
+            }
+
+            let instanceId = data.Instances[0].InstanceId;
+
+            params = {
+                Resources: [ instanceId ],
+                Tags: [ { Key: 'Name', Value: tagName } ]
+            };
+
+            EC2.createTags(params, (error, data) => {
+                if (error) {
+                    return reject(error);
+                }
+
+                return resolve(instanceId);
+            });
+        });
+    });
+};
+
 // Stop instance
 
 // Start instance
-
-// Launch instance
 
 // Terminate instance
 
@@ -302,10 +341,11 @@ module.exports = {
     getRegion: getRegion,
 
     getAllInstances: getAllInstances,
-    getInstanceByIpAddress: getInstanceByIpAddress,
-    getInstanceById: getInstanceById,
     getInstancesByState: getInstancesByState,
+    getInstanceById: getInstanceById,
+    getInstanceByIpAddress: getInstanceByIpAddress,
     getInstanceStatus: getInstanceStatus,
+    launchInstance: launchInstance,
 
     validRegions: validRegions,
     errors: errors
