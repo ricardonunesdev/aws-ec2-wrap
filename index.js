@@ -26,6 +26,8 @@ const checkInitialized = () => {
  * @param {string} region The region to validate
  */
 const checkValidRegion = (region) => {
+    checkNotEmpty(region);
+
     if (validRegions.indexOf(region) === -1) {
         throw new Error(errors.INVALID_REGION);
     }
@@ -36,12 +38,16 @@ const checkValidRegion = (region) => {
  * @param {string} ipAddress The ip address to validate
  */
 const checkValidIpAddress = (ipAddress) => {
+    checkNotEmpty(ipAddress);
+
     if (!isIp.v4(ipAddress)) {
         throw new Error(errors.INVALID_IP);
     }
 }
 
 const checkValidState = (state) => {
+    checkNotEmpty(state);
+
     if (validStates.indexOf(state) === -1) {
         throw new Error(errors.INVALID_STATE);
     }
@@ -64,8 +70,8 @@ const checkNotEmpty = (value) => {
  * @param {string} region The AWS region you want to interact with (example: 'us-west-1').
  */
 const init = (region) => {
-    checkNotEmpty(region);
     checkValidRegion(region);
+
     AWS.config.region = region;
     EC2 = new AWS.EC2();
 };
@@ -76,6 +82,7 @@ const init = (region) => {
  */
 const getRegion = () => {
     checkInitialized();
+
     return EC2.config.region;
 };
 
@@ -114,7 +121,6 @@ const getAllInstances = () => {
  */
 const getInstanceByIpAddress = (ipAddress) => {
     checkInitialized();
-    checkNotEmpty(ipAddress);
     checkValidIpAddress(ipAddress);
 
     return new Promise((resolve, reject) => {
@@ -179,7 +185,6 @@ const getInstanceById = (instanceId) => {
  */
 const getInstancesByState = (state) => {
     checkInitialized();
-    checkNotEmpty(state);
     checkValidState(state);
 
     return new Promise((resolve, reject) => {
