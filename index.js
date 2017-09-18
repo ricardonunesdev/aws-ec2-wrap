@@ -220,6 +220,30 @@ const getInstancesByState = (state) => {
 };
 
 // Get instance status
+const getInstanceStatus = (instanceId) => {
+    checkInitialized();
+    checkNotEmpty(instanceId);
+
+    return new Promise(function (resolve, reject) {
+        var instanceState;
+        var params = {
+            DryRun: false,
+            IncludeAllInstances: true,
+            InstanceIds: [ instanceId ]
+        };
+
+        EC2.describeInstanceStatus(params, function(error, data) {
+            if (error) {
+                return reject(error);
+            }
+
+            let instanceStatus = data.InstanceStatuses[0].InstanceState.Name;
+
+            return resolve(instanceStatus);
+        });
+    });
+
+};
 
 // Stop instance
 
@@ -284,6 +308,7 @@ module.exports = {
     getInstanceByIpAddress: getInstanceByIpAddress,
     getInstanceById: getInstanceById,
     getInstancesByState: getInstancesByState,
+    getInstanceStatus: getInstanceStatus,
 
     validRegions: validRegions,
     errors: errors
