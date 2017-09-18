@@ -349,7 +349,34 @@ const startInstance = (instanceId) => {
     });
 };
 
-// Terminate instance
+/**
+ * Terminate instance.
+ * @param {string} instanceId The id of the instance to terminate
+ */
+const terminateInstance = (instanceId) => {
+    checkInitialized();
+    checkNotEmpty(instanceId);
+
+    return new Promise((resolve, reject) => {
+        let params = {
+            DryRun: false,
+            InstanceIds: [instanceId]
+        };
+
+        EC2.terminateInstances(params, (error, data) => {
+            if (error) {
+                return reject(error);
+            }
+
+            let instanceStatus = {
+                previous: data.TerminatingInstances[0].PreviousState.Name,
+                current: data.TerminatingInstances[0].CurrentState.Name
+            };
+
+            return resolve(instanceStatus);
+        });
+    });
+};
 
 // -------------------------------------------------- //
 
@@ -410,6 +437,7 @@ module.exports = {
     launchInstance: launchInstance,
     stopInstance: stopInstance,
     startInstance: startInstance,
+    terminateInstance: terminateInstance,
 
     validRegions: validRegions,
     errors: errors
