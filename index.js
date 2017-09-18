@@ -213,7 +213,10 @@ const getInstancesByState = (state) => {
     });
 };
 
-// Get instance status
+/**
+ * Get instance status by id.
+ * @param {string} instanceId The id of the instance
+ */
 const getInstanceStatus = (instanceId) => {
     checkInitialized();
     checkNotEmpty(instanceId);
