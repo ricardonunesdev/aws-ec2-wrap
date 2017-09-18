@@ -134,7 +134,7 @@ const getInstanceByIpAddress = (ipAddress) => {
     return new Promise((resolve, reject) => {
         let params = {
             DryRun: false,
-            Filters: [ { Name: 'ip-address', Values: [ ipAddress ] } ]
+            Filters: [{ Name: 'ip-address', Values: [ipAddress] }]
         };
 
         EC2.describeInstances(params, (error, data) => {
@@ -166,7 +166,7 @@ const getInstanceById = (instanceId) => {
     return new Promise((resolve, reject) => {
         let params = {
             DryRun: false,
-            InstanceIds: [ instanceId ]
+            InstanceIds: [instanceId]
         };
 
         EC2.describeInstances(params, (error, data) => {
@@ -192,7 +192,7 @@ const getInstancesByState = (state) => {
     return new Promise((resolve, reject) => {
         let params = {
             DryRun: false,
-            Filters: [ { Name: 'instance-state-name', Values: [ state ] } ]
+            Filters: [{ Name: 'instance-state-name', Values: [state] }]
         };
 
         EC2.describeInstances(params, (error, data) => {
@@ -222,14 +222,14 @@ const getInstanceStatus = (instanceId) => {
     checkNotEmpty(instanceId);
 
     return new Promise(function (resolve, reject) {
-        var instanceState;
-        var params = {
+        let instanceState;
+        let params = {
             DryRun: false,
             IncludeAllInstances: true,
-            InstanceIds: [ instanceId ]
+            InstanceIds: [instanceId]
         };
 
-        EC2.describeInstanceStatus(params, function(error, data) {
+        EC2.describeInstanceStatus(params, function (error, data) {
             if (error) {
                 return reject(error);
             }
@@ -251,6 +251,7 @@ const getInstanceStatus = (instanceId) => {
  * @param {string} tagName The name tag you want to apply to the instance
  */
 const launchInstance = (imageId, instanceType, keyName, securityGroupName, tagName) => {
+    checkInitialized();
     checkNotEmpty(imageId);
     checkNotEmpty(instanceType);
     checkNotEmpty(keyName);
@@ -258,11 +259,11 @@ const launchInstance = (imageId, instanceType, keyName, securityGroupName, tagNa
     checkNotEmpty(tagName);
 
     return new Promise((resolve, reject) => {
-        var params = {
+        let params = {
             ImageId: imageId,
             InstanceType: instanceType,
             KeyName: keyName,
-            SecurityGroups: [ securityGroupName ],
+            SecurityGroups: [securityGroupName],
             MinCount: 1,
             MaxCount: 1
         };
@@ -275,8 +276,8 @@ const launchInstance = (imageId, instanceType, keyName, securityGroupName, tagNa
             let instanceId = data.Instances[0].InstanceId;
 
             params = {
-                Resources: [ instanceId ],
-                Tags: [ { Key: 'Name', Value: tagName } ]
+                Resources: [instanceId],
+                Tags: [{ Key: 'Name', Value: tagName }]
             };
 
             EC2.createTags(params, (error, data) => {
@@ -291,6 +292,30 @@ const launchInstance = (imageId, instanceType, keyName, securityGroupName, tagNa
 };
 
 // Stop instance
+const stopInstance = (instanceId) => {
+    checkInitialized();
+    checkNotEmpty(instanceId);
+
+    return new Promise((resolve, reject) => {
+        let params = {
+            DryRun: false,
+            InstanceIds: [instanceId]
+        };
+
+        EC2.stopInstances(params, (error, data) => {
+            if (error) {
+                return reject(error);
+            }
+
+            let instanceStatus = {
+                previous: data.StoppingInstances[0].PreviousState.Name,
+                current: data.StoppingInstances[0].CurrentState.Name
+            };
+
+            return resolve(instanceStatus);
+        });
+    });
+};
 
 // Start instance
 
@@ -353,6 +378,7 @@ module.exports = {
     getInstanceByIpAddress: getInstanceByIpAddress,
     getInstanceStatus: getInstanceStatus,
     launchInstance: launchInstance,
+    stopInstance: stopInstance,
 
     validRegions: validRegions,
     errors: errors
