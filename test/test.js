@@ -4,6 +4,8 @@ const expect = require('chai').expect;
 
 const EC2 = require('../');
 
+let tmpInstanceId = null;
+
 describe('AWS EC2 Wrapper', () => {
 
     describe('EC2.init()', () => {
@@ -159,7 +161,7 @@ describe('AWS EC2 Wrapper', () => {
 
         it('should return the status of the instance', (done) => {
             EC2.init('eu-west-1');
-            EC2.getInstanceStatus(process.env.INSTANCE_ID)
+            EC2.getInstanceStatus(process.env.TEST_INSTANCE_ID_1)
                 .then((instanceStatus) => {
                     expect(instanceStatus).to.be.a('string');
                     done();
@@ -221,7 +223,7 @@ describe('AWS EC2 Wrapper', () => {
         // it('should launch an instance and return its id', (done) => {
         //     EC2.launchInstance('ami-785db401', 't2.micro', process.env.SS_KEY_NAME, process.env.SS_SECURITY_GROUP_ID, 'test')
         //         .then((instanceId) => {
-        //             console.log('Instance launched with id: ' + instanceId);
+        //             tmpInstanceId = instanceId;
         //             expect(instanceId).to.be.a('string');
         //             done();
         //         })
@@ -252,9 +254,8 @@ describe('AWS EC2 Wrapper', () => {
         });
 
         it('should return the status of the instance', (done) => {
-            EC2.stopInstance(process.env.TEST_INSTANCE_ID_1)
+            EC2.stopInstance(process.env.TEST_INSTANCE_ID_2)
                 .then((instanceStatus) => {
-                    console.log(instanceStatus);
                     expect(instanceStatus).to.be.an('object');
                     expect(instanceStatus).to.have.property('previous');
                     expect(instanceStatus.previous).to.be.a('string');
