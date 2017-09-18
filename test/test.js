@@ -125,4 +125,33 @@ describe('AWS EC2 Wrapper', () => {
         });
     });
 
+        describe('EC2.getInstanceStatus(instanceId)', () => {
+            it('should return error if instance id is empty', () => {
+                EC2.init('eu-west-1');
+                expect(() => { EC2.getInstanceStatus(''); }).to.throw(EC2.errors.EMPTY_VALUE);
+            });
+
+            it('should return error if instance id is invalid', (done) => {
+                EC2.init('eu-west-1');
+                EC2.getInstanceStatus('abc')
+                    .then((instance) => {
+                        done('Expected to fail');
+                    })
+                    .catch((error) => {
+                        expect(error.code).to.be.equal('InvalidInstanceID.Malformed');
+                        done();
+                    });
+            });
+
+            it('should return the status of the instance with a valid instance id', (done) => {
+                EC2.init('eu-west-1');
+                EC2.getInstanceStatus(process.env.INSTANCE_ID)
+                    .then((instanceStatus) => {
+                        expect(instanceStatus).to.be.equal('running');
+                        done();
+                    })
+                    .catch(done);
+            });
+        });
+
 });
