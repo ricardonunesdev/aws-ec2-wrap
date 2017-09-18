@@ -171,7 +171,6 @@ describe('AWS EC2 Wrapper', () => {
     });
 
     describe('EC2.launchInstance()', () => {
-
         beforeEach(() => {
             EC2.init('eu-west-1');
         });
@@ -220,20 +219,18 @@ describe('AWS EC2 Wrapper', () => {
                 });
         });
 
-        // it('should launch an instance and return its id', (done) => {
-        //     EC2.launchInstance('ami-785db401', 't2.micro', process.env.SS_KEY_NAME, process.env.SS_SECURITY_GROUP_ID, 'test')
-        //         .then((instanceId) => {
-        //             tmpInstanceId = instanceId;
-        //             expect(instanceId).to.be.a('string');
-        //             done();
-        //         })
-        //         .catch(done);
-        // });
-
+        it('should launch an instance and return its id', (done) => {
+            EC2.launchInstance('ami-785db401', 't2.micro', process.env.SS_KEY_NAME, process.env.SS_SECURITY_GROUP_ID, 'test')
+                .then((instanceId) => {
+                    tmpInstanceId = instanceId;
+                    expect(instanceId).to.be.a('string');
+                    done();
+                })
+                .catch(done);
+        });
     });
 
     describe('EC2.stopInstance()', () => {
-
         before(() => {
             EC2.init('eu-west-1');
         });
@@ -265,11 +262,9 @@ describe('AWS EC2 Wrapper', () => {
                 })
                 .catch(done);
         });
-
     });
 
     describe('EC2.startInstance()', () => {
-
         before(() => {
             EC2.init('eu-west-1');
         });
@@ -301,11 +296,9 @@ describe('AWS EC2 Wrapper', () => {
                 })
                 .catch(done);
         });
-
     });
 
     describe('EC2.terminateInstance()', () => {
-
         before(() => {
             EC2.init('eu-west-1');
         });
@@ -326,7 +319,7 @@ describe('AWS EC2 Wrapper', () => {
         });
 
         it('should terminate the instance and return the status', (done) => {
-            EC2.terminateInstance(process.env.TEST_INSTANCE_ID_3)
+            EC2.terminateInstance(tmpInstanceId)
                 .then((instanceStatus) => {
                     expect(instanceStatus).to.be.an('object');
                     expect(instanceStatus).to.have.property('previous');
@@ -337,7 +330,6 @@ describe('AWS EC2 Wrapper', () => {
                 })
                 .catch(done);
         });
-
     });
 
 });
