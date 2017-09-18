@@ -65,7 +65,7 @@ const checkNotEmpty = (value) => {
     if ((typeof value === 'undefined') ||
         (value === null) ||
         (value === '') ||
-        ((typeof value === 'array') && (value.length === 0)) ||
+        (Array.isArray(value) && (value.length === 0)) ||
         ((typeof value === 'object') && (Object.keys(value).length === 0))) {
         throw new Error(errors.EMPTY_VALUE);
     }
@@ -174,13 +174,7 @@ const getInstanceById = (instanceId) => {
                 return reject(error);
             }
 
-            let instance;
-
-            if ((data.Reservations.length > 0) && (data.Reservations[0].Instances.length > 0)) {
-                instance = data.Reservations[0].Instances[0];
-            } else {
-                instance = {};
-            }
+            let instance = data.Reservations[0].Instances[0];
 
             return resolve(instance);
         });
