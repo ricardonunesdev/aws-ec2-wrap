@@ -218,15 +218,15 @@ describe('AWS EC2 Wrapper', () => {
                 });
         });
 
-        it('should launch an instance and return its id', (done) => {
-            EC2.launchInstance('ami-785db401', 't2.micro', process.env.SS_KEY_NAME, process.env.SS_SECURITY_GROUP_ID, 'test')
-                .then((instanceId) => {
-                    console.log('Instance launched with id: ' + instanceId);
-                    expect(instanceId).to.be.a('string');
-                    done();
-                })
-                .catch(done);
-        });
+        // it('should launch an instance and return its id', (done) => {
+        //     EC2.launchInstance('ami-785db401', 't2.micro', process.env.SS_KEY_NAME, process.env.SS_SECURITY_GROUP_ID, 'test')
+        //         .then((instanceId) => {
+        //             console.log('Instance launched with id: ' + instanceId);
+        //             expect(instanceId).to.be.a('string');
+        //             done();
+        //         })
+        //         .catch(done);
+        // });
 
     });
 
