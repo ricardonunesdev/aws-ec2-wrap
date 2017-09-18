@@ -139,7 +139,7 @@ describe('AWS EC2 Wrapper', () => {
         });
     });
 
-    describe('EC2.getInstanceStatus(instanceId)', () => {
+    describe('EC2.getInstanceStatus()', () => {
         it('should return error if instance id is empty', () => {
             EC2.init('eu-west-1');
             expect(() => { EC2.getInstanceStatus(''); }).to.throw(EC2.errors.EMPTY_VALUE);
@@ -166,6 +166,68 @@ describe('AWS EC2 Wrapper', () => {
                 })
                 .catch(done);
         });
+    });
+
+    describe('EC2.launchInstance()', () => {
+
+        beforeEach(() => {
+            EC2.init('eu-west-1');
+        });
+
+        it('should throw an error on invalid image id', (done) => {
+            EC2.launchInstance('abc', 't2.micro', process.env.SS_KEY_NAME, process.env.SS_SECURITY_GROUP_ID, 'test')
+                .then((instanceId) => {
+                    done('Expected to fail');
+                })
+                .catch((error) => {
+                    expect(error.code).to.be.equal('InvalidAMIID.Malformed');
+                    done();
+                });
+        });
+
+        it('should throw an error on invalid instance type', (done) => {
+            EC2.launchInstance('ami-785db401', 'abc', process.env.SS_KEY_NAME, process.env.SS_SECURITY_GROUP_ID, 'test')
+                .then((instanceId) => {
+                    done('Expected to fail');
+                })
+                .catch((error) => {
+                    expect(error.code).to.be.equal('InvalidParameterValue');
+                    done();
+                });
+        });
+
+        it('should throw an error on invalid key name', (done) => {
+            EC2.launchInstance('ami-785db401', 't2.micro', 'abc', process.env.SS_SECURITY_GROUP_ID, 'test')
+                .then((instanceId) => {
+                    done('Expected to fail');
+                })
+                .catch((error) => {
+                    expect(error.code).to.be.equal('InvalidKeyPair.NotFound');
+                    done();
+                });
+        });
+
+        it('should throw an error on invalid security group id', (done) => {
+            EC2.launchInstance('ami-785db401', 't2.micro', process.env.SS_KEY_NAME, 'abc', 'test')
+                .then((instanceId) => {
+                    done('Expected to fail');
+                })
+                .catch((error) => {
+                    expect(error.code).to.be.equal('InvalidParameterValue');
+                    done();
+                });
+        });
+
+        it('should launch an instance and return its id', (done) => {
+            EC2.launchInstance('ami-785db401', 't2.micro', process.env.SS_KEY_NAME, process.env.SS_SECURITY_GROUP_ID, 'test')
+                .then((instanceId) => {
+                    console.log('Instance launched with id: ' + instanceId);
+                    expect(instanceId).to.be.a('string');
+                    done();
+                })
+                .catch(done);
+        });
+
     });
 
 });
