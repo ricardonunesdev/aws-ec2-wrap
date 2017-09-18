@@ -109,7 +109,7 @@ describe('AWS EC2 Wrapper', () => {
 
         it('should return the instance with a valid instance id', (done) => {
             EC2.init('eu-west-1');
-            EC2.getInstanceById(process.env.INSTANCE_ID)
+            EC2.getInstanceById(process.env.TEST_INSTANCE_ID_1)
                 .then((instance) => {
                     expect(instance).to.be.an('object');
                     expect(instance).to.not.be.empty;
@@ -268,40 +268,76 @@ describe('AWS EC2 Wrapper', () => {
 
     });
 
-        describe('EC2.startInstance()', () => {
+    describe('EC2.startInstance()', () => {
 
-            before(() => {
-                EC2.init('eu-west-1');
-            });
-
-            it('should throw error if instance id is empty', () => {
-                expect(() => { EC2.startInstance(''); }).to.throw(EC2.errors.EMPTY_VALUE);
-            });
-
-            it('should throw error if instance id is invalid', (done) => {
-                EC2.startInstance('abc')
-                    .then((instance) => {
-                        done('Expected to fail');
-                    })
-                    .catch((error) => {
-                        expect(error.code).to.be.equal('InvalidInstanceID.Malformed');
-                        done();
-                    });
-            });
-
-            it('should start the instance and return the status', (done) => {
-                EC2.startInstance(process.env.TEST_INSTANCE_ID_1)
-                    .then((instanceStatus) => {
-                        expect(instanceStatus).to.be.an('object');
-                        expect(instanceStatus).to.have.property('previous');
-                        expect(instanceStatus.previous).to.be.a('string');
-                        expect(instanceStatus).to.have.property('current');
-                        expect(instanceStatus.current).to.be.a('string');
-                        done();
-                    })
-                    .catch(done);
-            });
-
+        before(() => {
+            EC2.init('eu-west-1');
         });
+
+        it('should throw error if instance id is empty', () => {
+            expect(() => { EC2.startInstance(''); }).to.throw(EC2.errors.EMPTY_VALUE);
+        });
+
+        it('should throw error if instance id is invalid', (done) => {
+            EC2.startInstance('abc')
+                .then((instance) => {
+                    done('Expected to fail');
+                })
+                .catch((error) => {
+                    expect(error.code).to.be.equal('InvalidInstanceID.Malformed');
+                    done();
+                });
+        });
+
+        it('should start the instance and return the status', (done) => {
+            EC2.startInstance(process.env.TEST_INSTANCE_ID_1)
+                .then((instanceStatus) => {
+                    expect(instanceStatus).to.be.an('object');
+                    expect(instanceStatus).to.have.property('previous');
+                    expect(instanceStatus.previous).to.be.a('string');
+                    expect(instanceStatus).to.have.property('current');
+                    expect(instanceStatus.current).to.be.a('string');
+                    done();
+                })
+                .catch(done);
+        });
+
+    });
+
+    describe('EC2.terminateInstance()', () => {
+
+        before(() => {
+            EC2.init('eu-west-1');
+        });
+
+        it('should throw error if instance id is empty', () => {
+            expect(() => { EC2.terminateInstance(''); }).to.throw(EC2.errors.EMPTY_VALUE);
+        });
+
+        it('should throw error if instance id is invalid', (done) => {
+            EC2.terminateInstance('abc')
+                .then((instance) => {
+                    done('Expected to fail');
+                })
+                .catch((error) => {
+                    expect(error.code).to.be.equal('InvalidInstanceID.Malformed');
+                    done();
+                });
+        });
+
+        it('should terminate the instance and return the status', (done) => {
+            EC2.terminateInstance(process.env.TEST_INSTANCE_ID_3)
+                .then((instanceStatus) => {
+                    expect(instanceStatus).to.be.an('object');
+                    expect(instanceStatus).to.have.property('previous');
+                    expect(instanceStatus.previous).to.be.a('string');
+                    expect(instanceStatus).to.have.property('current');
+                    expect(instanceStatus.current).to.be.a('string');
+                    done();
+                })
+                .catch(done);
+        });
+
+    });
 
 });
