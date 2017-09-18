@@ -74,7 +74,7 @@ describe('AWS EC2 Wrapper', () => {
                 .catch(done);
         });
 
-        it('should return the instance with a correct ip address', (done) => {
+        it('should return the instance with the correct ip address', (done) => {
             EC2.init('eu-west-1');
 
             EC2.getInstanceByIpAddress(process.env.IP_ADDRESS)
@@ -157,7 +157,7 @@ describe('AWS EC2 Wrapper', () => {
                 });
         });
 
-        it('should return the status of the instance with a valid instance id', (done) => {
+        it('should return the status of the instance', (done) => {
             EC2.init('eu-west-1');
             EC2.getInstanceStatus(process.env.INSTANCE_ID)
                 .then((instanceStatus) => {
