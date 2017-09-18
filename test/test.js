@@ -11,6 +11,10 @@ describe('AWS EC2 Wrapper', () => {
             expect(() => { EC2.getRegion(); }).to.throw(EC2.errors.NOT_INITIALIZED);
         });
 
+        it('should return error if trying to set an empty EC2 region', () => {
+            expect(() => { EC2.init(''); }).to.throw(EC2.errors.EMPTY_VALUE);
+        });
+
         it('should return error if trying to set an invalid EC2 region', () => {
             expect(() => { EC2.init('abc'); }).to.throw(EC2.errors.INVALID_REGION);
         });
@@ -35,12 +39,17 @@ describe('AWS EC2 Wrapper', () => {
     });
 
     describe('EC2.getInstanceByIpAddress()', () => {
-        it('should return error if ip address is invalid', () => {
+        it('should return error if ip address is empty', () => {
             EC2.init('eu-west-1');
-            expect(() => { EC2.getInstanceByIpAddress('1.2.3'); }).to.throw(EC2.errors.INVALID_IP);
+            expect(() => { EC2.getInstanceByIpAddress(''); }).to.throw(EC2.errors.EMPTY_VALUE);
         });
 
-        it('should return an empty object', (done) => {
+        it('should return error if ip address is invalid', () => {
+            EC2.init('eu-west-1');
+            expect(() => { EC2.getInstanceByIpAddress('abc'); }).to.throw(EC2.errors.INVALID_IP);
+        });
+
+        it('should return an empty object if ip address is 1.2.3.4', (done) => {
             EC2.init('eu-west-1');
             EC2.getInstanceByIpAddress('1.2.3.4')
                 .then((instance) => {
@@ -51,7 +60,7 @@ describe('AWS EC2 Wrapper', () => {
                 .catch(done);
         });
 
-        it('should return the instance', (done) => {
+        it('should return the instance with a correct ip address', (done) => {
             EC2.init('eu-west-1');
 
             EC2.getInstanceByIpAddress(process.env.IP_ADDRESS)
@@ -65,18 +74,24 @@ describe('AWS EC2 Wrapper', () => {
     });
 
     describe('EC2.getInstanceById()', () => {
-        it('should return the instance', (done) => {
+        it('should return error if instance id is empty', () => {
             EC2.init('eu-west-1');
-            EC2.getInstanceById('')
-                .then((instance) => {
-                    expect(instance).to.be.an('object');
-                    expect(instance).to.be.empty;
-                    done();
-                })
-                .catch(done);
+            expect(() => { EC2.getInstanceById(''); }).to.throw(EC2.errors.EMPTY_VALUE);
         });
 
-        it('should return the instance', (done) => {
+        it('should return error if instance id is invalid', (done) => {
+            EC2.init('eu-west-1');
+            EC2.getInstanceById('abc')
+                .then((instance) => {
+                    done('Expected to fail');
+                })
+                .catch((error) => {
+                    expect(error.code).to.be.equal('InvalidInstanceID.Malformed');
+                    done();
+                });
+        });
+
+        it('should return the instance with a valid instance id', (done) => {
             EC2.init('eu-west-1');
             EC2.getInstanceById(process.env.INSTANCE_ID)
                 .then((instance) => {
@@ -89,6 +104,11 @@ describe('AWS EC2 Wrapper', () => {
     });
 
     describe('EC2.getInstancesByState()', () => {
+        it('should return error if state is empty', () => {
+            EC2.init('eu-west-1');
+            expect(() => { EC2.getInstancesByState(''); }).to.throw(EC2.errors.EMPTY_VALUE);
+        });
+
         it('should return error if state is invalid', () => {
             EC2.init('eu-west-1');
             expect(() => { EC2.getInstancesByState('abc'); }).to.throw(EC2.errors.INVALID_STATE);
