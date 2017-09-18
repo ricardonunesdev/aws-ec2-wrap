@@ -320,7 +320,34 @@ const stopInstance = (instanceId) => {
     });
 };
 
-// Start instance
+/**
+ * Start instance.
+ * @param {string} instanceId The id of the instance to start
+ */
+const startInstance = (instanceId) => {
+    checkInitialized();
+    checkNotEmpty(instanceId);
+
+    return new Promise((resolve, reject) => {
+        let params = {
+            DryRun: false,
+            InstanceIds: [instanceId]
+        };
+
+        EC2.startInstances(params, (error, data) => {
+            if (error) {
+                return reject(error);
+            }
+
+            let instanceStatus = {
+                previous: data.StartingInstances[0].PreviousState.Name,
+                current: data.StartingInstances[0].CurrentState.Name
+            };
+
+            return resolve(instanceStatus);
+        });
+    });
+};
 
 // Terminate instance
 
@@ -382,6 +409,7 @@ module.exports = {
     getInstanceStatus: getInstanceStatus,
     launchInstance: launchInstance,
     stopInstance: stopInstance,
+    startInstance: startInstance,
 
     validRegions: validRegions,
     errors: errors
