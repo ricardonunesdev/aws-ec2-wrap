@@ -291,7 +291,10 @@ const launchInstance = (imageId, instanceType, keyName, securityGroupName, tagNa
     });
 };
 
-// Stop instance
+/**
+ * Stop instance.
+ * @param {string} instanceId The id of the instance to stop
+ */
 const stopInstance = (instanceId) => {
     checkInitialized();
     checkNotEmpty(instanceId);
