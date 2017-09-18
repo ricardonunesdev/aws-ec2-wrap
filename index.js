@@ -29,6 +29,13 @@ const checkValidRegion = (region) => {
     }
 };
 
+
+const checkValidState = (state) => {
+    if (validStates.indexOf(state) === -1) {
+        throw new Error(errors.INVALID_STATE);
+    }
+};
+
 /**
  * Check if the ip address is valid
  * @param {string} ipAddress The ip address to validate
@@ -125,7 +132,7 @@ const getInstanceByIpAddress = (ipAddress) => {
  * Get an instance by id.
  * @param {string} instanceId The id of the instance
  */
-const getInstanceByInstanceId = (instanceId) => {
+const getInstanceById = (instanceId) => {
     checkInitialized();
 
     return new Promise((resolve, reject) => {
@@ -153,6 +160,33 @@ const getInstanceByInstanceId = (instanceId) => {
 };
 
 // Get instances by instance state
+const getInstancesByState = (state) => {
+    checkInitialized();
+    checkValidState(state);
+
+    return new Promise((resolve, reject) => {
+        let params = {
+            DryRun: false,
+            Filters: [ { Name: 'instance-state-name', Values: [ state ] } ]
+        };
+
+        EC2.describeInstances(params, (error, data) => {
+            if (error) {
+                return reject(error);
+            }
+
+            let instances = [];
+
+            data.Reservations.forEach((reservation) => {
+                reservation.Instances.forEach((instance) => {
+                    instances.push(instance);
+                });
+            });
+
+            return resolve(instances);
+        });
+    });
+};
 
 /**
  * Valid AWS regions for EC2.
@@ -175,12 +209,25 @@ const validRegions = [
 ];
 
 /**
+ * Valid states for EC2 instances
+ */
+const validStates = [
+    'pending',
+    'running',
+    'shutting-down',
+    'terminated',
+    'stopping',
+    'stopped'
+];
+
+/**
  * Common error list.
  */
 const errors = {
     NOT_INITIALIZED: 'EC2 not initialized. Please call EC2.init() with a valid region.',
-    INVALID_REGION: 'Region is invalid. Please check the valid regions for EC2 @ http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region.',
-    INVALID_IP: 'IP address is invalid. Please insert a valid IPv4 address.'
+    INVALID_REGION: 'Region is invalid. Please check the valid regions for EC2 @ http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-available-regions.',
+    INVALID_IP: 'IP address is invalid. Please insert a valid IPv4 address.',
+    INVALID_STATE: 'State is invalid. Please check the valid states for EC2 @ http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_InstanceState.html.'
 };
 
 module.exports = {
@@ -189,7 +236,8 @@ module.exports = {
 
     getAllInstances: getAllInstances,
     getInstanceByIpAddress: getInstanceByIpAddress,
-    getInstanceByInstanceId: getInstanceByInstanceId,
+    getInstanceById: getInstanceById,
+    getInstancesByState: getInstancesByState,
 
     validRegions: validRegions,
     errors: errors
