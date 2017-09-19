@@ -4,7 +4,7 @@ require('dotenv').config();
 
 const Promise = require('bluebird');
 const AWS = require('aws-sdk');
-const isIp = require('is-ip');
+const validate = require('./lib/validate');
 
 const latestApiVersion = '2016-11-15';
 
@@ -13,72 +13,11 @@ let EC2 = null;
 // -------------------------------------------------- //
 
 /**
- * Check if the EC2 connection has been initialized.
- */
-const checkInitialized = () => {
-    if (EC2 === null) {
-        throw new Error(errors.NOT_INITIALIZED);
-    }
-};
-
-/**
- * Check if the region is valid for EC2.
- * @param {string} region The region to validate
- */
-const checkValidRegion = (region) => {
-    checkNotEmpty(region);
-
-    if (validRegions.indexOf(region) === -1) {
-        throw new Error(errors.INVALID_REGION);
-    }
-};
-
-/**
- * Check if the ip address is valid.
- * @param {string} ipAddress The ip address to validate
- */
-const checkValidIpAddress = (ipAddress) => {
-    checkNotEmpty(ipAddress);
-
-    if (!isIp.v4(ipAddress)) {
-        throw new Error(errors.INVALID_IP);
-    }
-}
-
-/**
- * Check if the state is valid.
- * @param {string} state The state to validate
- */
-const checkValidState = (state) => {
-    checkNotEmpty(state);
-
-    if (validStates.indexOf(state) === -1) {
-        throw new Error(errors.INVALID_STATE);
-    }
-};
-
-/**
- * Check if the value is empty
- * @param {*} value The value to validate
- */
-const checkNotEmpty = (value) => {
-    if ((typeof value === 'undefined') ||
-        (value === null) ||
-        (value === '') ||
-        (Array.isArray(value) && (value.length === 0)) ||
-        ((typeof value === 'object') && (Object.keys(value).length === 0))) {
-        throw new Error(errors.EMPTY_VALUE);
-    }
-};
-
-// -------------------------------------------------- //
-
-/**
  * Initialize the EC2 connection and sets the AWS region.
  * @param {string} region The AWS region you want to interact with (example: 'us-west-1').
  */
 const init = (region) => {
-    checkValidRegion(region);
+    validate.checkValidRegion(region);
 
     AWS.config.region = region;
     EC2 = new AWS.EC2();
@@ -89,7 +28,7 @@ const init = (region) => {
  * @return {string} The name of the AWS region
  */
 const getRegion = () => {
-    checkInitialized();
+    validate.checkInitialized(EC2);
 
     return EC2.config.region;
 };
@@ -98,7 +37,7 @@ const getRegion = () => {
  * Get all instances.
  */
 const getAllInstances = () => {
-    checkInitialized();
+    validate.checkInitialized(EC2);
 
     return new Promise((resolve, reject) => {
         let params = {
@@ -128,8 +67,8 @@ const getAllInstances = () => {
  * @param {string} ipAddress The ip address of the instance
  */
 const getInstanceByIpAddress = (ipAddress) => {
-    checkInitialized();
-    checkValidIpAddress(ipAddress);
+    validate.checkInitialized(EC2);
+    validate.checkValidIpAddress(ipAddress);
 
     return new Promise((resolve, reject) => {
         let params = {
@@ -160,8 +99,8 @@ const getInstanceByIpAddress = (ipAddress) => {
  * @param {string} instanceId The id of the instance
  */
 const getInstanceById = (instanceId) => {
-    checkInitialized();
-    checkNotEmpty(instanceId);
+    validate.checkInitialized(EC2);
+    validate.checkNotEmpty(instanceId);
 
     return new Promise((resolve, reject) => {
         let params = {
@@ -186,8 +125,8 @@ const getInstanceById = (instanceId) => {
  * @param {string} state The state of the instances
  */
 const getInstancesByState = (state) => {
-    checkInitialized();
-    checkValidState(state);
+    validate.checkInitialized(EC2);
+    validate.checkValidState(state);
 
     return new Promise((resolve, reject) => {
         let params = {
@@ -218,8 +157,8 @@ const getInstancesByState = (state) => {
  * @param {string} instanceId The id of the instance
  */
 const getInstanceStatus = (instanceId) => {
-    checkInitialized();
-    checkNotEmpty(instanceId);
+    validate.checkInitialized(EC2);
+    validate.checkNotEmpty(instanceId);
 
     return new Promise(function (resolve, reject) {
         let instanceState;
@@ -251,12 +190,12 @@ const getInstanceStatus = (instanceId) => {
  * @param {string} tagName The name tag you want to apply to the instance
  */
 const launchInstance = (imageId, instanceType, keyName, securityGroupName, tagName) => {
-    checkInitialized();
-    checkNotEmpty(imageId);
-    checkNotEmpty(instanceType);
-    checkNotEmpty(keyName);
-    checkNotEmpty(securityGroupName);
-    checkNotEmpty(tagName);
+    validate.checkInitialized(EC2);
+    validate.checkNotEmpty(imageId);
+    validate.checkNotEmpty(instanceType);
+    validate.checkNotEmpty(keyName);
+    validate.checkNotEmpty(securityGroupName);
+    validate.checkNotEmpty(tagName);
 
     return new Promise((resolve, reject) => {
         let params = {
@@ -296,8 +235,8 @@ const launchInstance = (imageId, instanceType, keyName, securityGroupName, tagNa
  * @param {string} instanceId The id of the instance to stop
  */
 const stopInstance = (instanceId) => {
-    checkInitialized();
-    checkNotEmpty(instanceId);
+    validate.checkInitialized(EC2);
+    validate.checkNotEmpty(instanceId);
 
     return new Promise((resolve, reject) => {
         let params = {
@@ -325,8 +264,8 @@ const stopInstance = (instanceId) => {
  * @param {string} instanceId The id of the instance to start
  */
 const startInstance = (instanceId) => {
-    checkInitialized();
-    checkNotEmpty(instanceId);
+    validate.checkInitialized(EC2);
+    validate.checkNotEmpty(instanceId);
 
     return new Promise((resolve, reject) => {
         let params = {
@@ -354,8 +293,8 @@ const startInstance = (instanceId) => {
  * @param {string} instanceId The id of the instance to terminate
  */
 const terminateInstance = (instanceId) => {
-    checkInitialized();
-    checkNotEmpty(instanceId);
+    validate.checkInitialized(EC2);
+    validate.checkNotEmpty(instanceId);
 
     return new Promise((resolve, reject) => {
         let params = {
@@ -380,51 +319,6 @@ const terminateInstance = (instanceId) => {
 
 // -------------------------------------------------- //
 
-/**
- * Valid AWS regions for EC2.
- */
-const validRegions = [
-    'ap-northeast-1',
-    'ap-northeast-2',
-    'ap-south-1',
-    'ap-southeast-1',
-    'ap-southeast-2',
-    'ca-central-1',
-    'eu-central-1',
-    'eu-west-1',
-    'eu-west-2',
-    'sa-east-1',
-    'us-east-1',
-    'us-east-2',
-    'us-west-1',
-    'us-west-2'
-];
-
-/**
- * Valid states for EC2 instances
- */
-const validStates = [
-    'pending',
-    'running',
-    'shutting-down',
-    'terminated',
-    'stopping',
-    'stopped'
-];
-
-/**
- * Common error list.
- */
-const errors = {
-    NOT_INITIALIZED: 'EC2 not initialized. Please call EC2.init() with a valid region.',
-    EMPTY_VALUE: 'You provided an empty argument. Please fix it and try again.',
-    INVALID_REGION: 'Region is invalid. Please check the valid regions for EC2 @ http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-available-regions.',
-    INVALID_IP: 'IP address is invalid. Please insert a valid IPv4 address.',
-    INVALID_STATE: 'State is invalid. Please check the valid states for EC2 @ http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_InstanceState.html.'
-};
-
-// -------------------------------------------------- //
-
 module.exports = {
     init: init,
     getRegion: getRegion,
@@ -439,6 +333,5 @@ module.exports = {
     startInstance: startInstance,
     terminateInstance: terminateInstance,
 
-    validRegions: validRegions,
-    errors: errors
+    errors: validate.errors
 };
