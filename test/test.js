@@ -61,19 +61,19 @@ describe('AWS EC2 Wrapper', () => {
         });
     });
 
-    describe('EC2.getInstancesByState()', () => {
+    describe('EC2.getInstancesByStatus()', () => {
         beforeEach(() => { EC2.init('eu-west-1'); });
 
-        it('should return error if state is empty', () => {
-            expect(() => { EC2.getInstancesByState(''); }).to.throw(EC2.errors.EMPTY_VALUE);
+        it('should return error if status is empty', () => {
+            expect(() => { EC2.getInstancesByStatus(''); }).to.throw(EC2.errors.EMPTY_VALUE);
         });
 
-        it('should return error if state is invalid', () => {
-            expect(() => { EC2.getInstancesByState('abc'); }).to.throw(EC2.errors.INVALID_STATE);
+        it('should return error if status is invalid', () => {
+            expect(() => { EC2.getInstancesByStatus('abc'); }).to.throw(EC2.errors.INVALID_STATUS);
         });
 
         it('should return an array of running instances', (done) => {
-            EC2.getInstancesByState('running')
+            EC2.getInstancesByStatus('running')
                 .then((instances) => {
                     expect(instances).to.be.an('array');
                     done();
