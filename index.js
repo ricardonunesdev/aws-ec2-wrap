@@ -63,6 +63,38 @@ const getAllInstances = () => {
 };
 
 /**
+ * Get many instances by state.
+ * @param {string} state The state of the instances
+ */
+const getInstancesByState = (state) => {
+    validate.checkInitialized(EC2);
+    validate.checkValidState(state);
+
+    return new Promise((resolve, reject) => {
+        let params = {
+            DryRun: false,
+            Filters: [{ Name: 'instance-state-name', Values: [state] }]
+        };
+
+        EC2.describeInstances(params, (error, data) => {
+            if (error) {
+                return reject(error);
+            }
+
+            let instances = [];
+
+            data.Reservations.forEach((reservation) => {
+                reservation.Instances.forEach((instance) => {
+                    instances.push(instance);
+                });
+            });
+
+            return resolve(instances);
+        });
+    });
+};
+
+/**
  * Get one instance by ip address.
  * @param {string} ipAddress The ip address of the instance
  */
@@ -121,38 +153,6 @@ const getInstanceById = (instanceId) => {
 };
 
 /**
- * Get many instances by state.
- * @param {string} state The state of the instances
- */
-const getInstancesByState = (state) => {
-    validate.checkInitialized(EC2);
-    validate.checkValidState(state);
-
-    return new Promise((resolve, reject) => {
-        let params = {
-            DryRun: false,
-            Filters: [{ Name: 'instance-state-name', Values: [state] }]
-        };
-
-        EC2.describeInstances(params, (error, data) => {
-            if (error) {
-                return reject(error);
-            }
-
-            let instances = [];
-
-            data.Reservations.forEach((reservation) => {
-                reservation.Instances.forEach((instance) => {
-                    instances.push(instance);
-                });
-            });
-
-            return resolve(instances);
-        });
-    });
-};
-
-/**
  * Get instance status by id.
  * @param {string} instanceId The id of the instance
  */
@@ -178,7 +178,23 @@ const getInstanceStatus = (instanceId) => {
             return resolve(instanceStatus);
         });
     });
+};
 
+/**
+ * Get instance ip address by id.
+ * @param {string} instanceId The id of the instance
+ */
+const getInstanceIpAddress = (instanceId) => {
+    validate.checkInitialized(EC2);
+    validate.checkNotEmpty(instanceId);
+
+    return new Promise(function (resolve, reject) {
+        getInstanceById(instanceId)
+            .then((instance) => {
+                return resolve(instance.PublicIpAddress);
+            })
+            .catch(reject);
+    });
 };
 
 /**
@@ -328,6 +344,7 @@ module.exports = {
     getInstanceById: getInstanceById,
     getInstanceByIpAddress: getInstanceByIpAddress,
     getInstanceStatus: getInstanceStatus,
+    getInstanceIpAddress: getInstanceIpAddress,
     launchInstance: launchInstance,
     stopInstance: stopInstance,
     startInstance: startInstance,
