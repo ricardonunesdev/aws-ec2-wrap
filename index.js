@@ -66,14 +66,14 @@ const getAllInstances = () => {
  * Get many instances by state.
  * @param {string} state The state of the instances
  */
-const getInstancesByState = (state) => {
+const getInstancesByStatus = (status) => {
     validate.checkInitialized(EC2);
-    validate.checkValidState(state);
+    validate.checkValidState(status);
 
     return new Promise((resolve, reject) => {
         let params = {
             DryRun: false,
-            Filters: [{ Name: 'instance-state-name', Values: [state] }]
+            Filters: [{ Name: 'instance-state-name', Values: [status] }]
         };
 
         EC2.describeInstances(params, (error, data) => {
@@ -205,12 +205,12 @@ const getInstanceIpAddress = (instanceId) => {
  * @param {string} securityGroupName The name of the security group
  * @param {string} tagName The name tag you want to apply to the instance
  */
-const launchInstance = (imageId, instanceType, keyName, securityGroupName, tagName) => {
+const launchInstance = (imageId, instanceType, keyName, securityGroup, tagName) => {
     validate.checkInitialized(EC2);
     validate.checkNotEmpty(imageId);
     validate.checkNotEmpty(instanceType);
     validate.checkNotEmpty(keyName);
-    validate.checkNotEmpty(securityGroupName);
+    validate.checkNotEmpty(securityGroup);
     validate.checkNotEmpty(tagName);
 
     return new Promise((resolve, reject) => {
@@ -218,7 +218,7 @@ const launchInstance = (imageId, instanceType, keyName, securityGroupName, tagNa
             ImageId: imageId,
             InstanceType: instanceType,
             KeyName: keyName,
-            SecurityGroups: [securityGroupName],
+            SecurityGroups: [securityGroup],
             MinCount: 1,
             MaxCount: 1
         };
@@ -340,7 +340,7 @@ module.exports = {
     getRegion: getRegion,
 
     getAllInstances: getAllInstances,
-    getInstancesByState: getInstancesByState,
+    getInstancesByStatus: getInstancesByStatus,
     getInstanceById: getInstanceById,
     getInstanceByIpAddress: getInstanceByIpAddress,
     getInstanceStatus: getInstanceStatus,
