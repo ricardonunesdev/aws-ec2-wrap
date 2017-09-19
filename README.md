@@ -367,7 +367,7 @@ Is thrown when you attempt to call [getInstanceByIp](#getinstancebyip) with an i
 
 ### INVALID_STATUS
 
-Is thrown when you attempt to call [getInstancesByStatus)(#getinstancesbystatus) with an invalid status.
+Is thrown when you attempt to call [getInstancesByStatus](#getinstancesbystatus) with an invalid status.
 
 ## Feedback
 
