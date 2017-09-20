@@ -406,7 +406,7 @@ All bug reports and feature requests are welcome, and should be submitted throug
 
  - Create a Github issue [here](https://github.com/ricardonunesdev/aws-ec2-wrap/issues)
  - Tweet me at [@ricardonunesdev](https://twitter.com/ricardonunesdev)
- - Chat with me on [Gitter](htts://gitter.im/ricardonunesdev/aws-ec2-wrap)
+ - Chat with me on [Gitter](https://gitter.im/ricardonunesdev/aws-ec2-wrap)
  - Send email to [ricardonunesdev@gmail.com](mailto://ricardonunesdev@gmail.com)
 
 All requests will be created as Github issues, if you don't use that channel.
