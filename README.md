@@ -1,5 +1,7 @@
 # AWS EC2 Wrapper
 
+[![Join the chat at https://gitter.im/ricardonunesdev/aws-ec2-wrap](https://badges.gitter.im/ricardonunesdev/aws-ec2-wrap.svg)](https://gitter.im/ricardonunesdev/aws-ec2-wrap?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![NPM](https://nodei.co/npm/aws-ec2-wrap.png)](https://nodei.co/npm/aws-ec2-wrap/)
 
 [![Build Status](https://travis-ci.org/ricardonunesdev/aws-ec2-wrap.svg?branch=master)](https://travis-ci.org/ricardonunesdev/aws-ec2-wrap)
