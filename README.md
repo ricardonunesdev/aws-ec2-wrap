@@ -31,6 +31,31 @@ To install the package, run this command inside your project's folder:
 $ npm install aws-ec2-wrap --save
 ```
 
+## Credentials
+
+Before using this module you need to setup your credentials to allow access to your AWS account.
+
+There two ways you can do that:
+
+ - Create a `~/.aws/credentials` file to allow access that computer with the following content (replace the keys with your own):
+
+    ```
+    [default]
+    aws_access_key_id=AKIAIOSFODNN7EXAMPLE
+    aws_secret_access_key=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+    ```
+
+    If you already use the AWS CLI, this file should already exist.
+
+ - Create a `.env` at the root of your project's folder with the following content (again replace the keys with your own):
+
+    ```
+    AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
+    AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+    ```
+
+    The [dot-env](https://www.npmjs.com/package/dotenv) module will automatically import your keys from the `.env` file, there's no need to install it or require it in your project.
+
 ## Usage
 
 To start using the module's methods, you need to initialize it first with your region (using the method [init](#init)).
@@ -389,6 +414,8 @@ There are many more AWS API methods that aren't wrapped by this module, I implem
  - Add more methods (volumes, elastic ips, security groups, images, etc)
  - Support for handling large number of instances (above API limit)
  - Provide example for custom error handling
+ - Information on setting up credentials
+ - Additional feedback channels
 
 ## License
 
