@@ -400,9 +400,16 @@ Is thrown when you attempt to call [getInstancesByStatus](#getinstancesbystatus)
 
 ## Feedback
 
-All bug reports and feature requests are welcome, and should be submitted as issues [here](https://github.com/ricardonunesdev/aws-ec2-wrap/issues).
+All bug reports and feature requests are welcome, and should be submitted through one of the following channels:
 
-There are many more AWS API methods that aren't wrapped by this module, I implemented the ones that are most useful to me, but I'll gladly add any that you might require.
+ - Create a Github issue [here](https://github.com/ricardonunesdev/aws-ec2-wrap/issues)
+ - Tweet me at [@ricardonunesdev](https://twitter.com/ricardonunesdev)
+ - Chat with me on [Gitter](htts://gitter.im/ricardonunesdev/aws-ec2-wrap)
+ - Send email to [ricardonunesdev@gmail.com](mailto://ricardonunesdev@gmail.com)
+
+All requests will be created as Github issues, if you don't use that channel.
+
+There are many more AWS API methods that aren't wrapped by this module. I implemented the ones that are most useful to me at the moment. I'll gladly add any that you might require on your project.
 
 ## Roadmap
 
@@ -414,8 +421,8 @@ There are many more AWS API methods that aren't wrapped by this module, I implem
  - Add more methods (volumes, elastic ips, security groups, images, etc)
  - Support for handling large number of instances (above API limit)
  - Provide example for custom error handling
- - Information on setting up credentials
- - Additional feedback channels
+ - ~~Information on setting up credentials~~
+ - ~~Additional feedback channels~~
 
 ## License
 
