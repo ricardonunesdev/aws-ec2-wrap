@@ -1,14 +1,14 @@
 # AWS EC2 Wrapper
 
-[![Join the chat at https://gitter.im/ricardonunesdev/aws-ec2-wrap](https://badges.gitter.im/ricardonunesdev/aws-ec2-wrap.svg)](https://gitter.im/ricardonunesdev/aws-ec2-wrap?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 [![NPM](https://nodei.co/npm/aws-ec2-wrap.png)](https://nodei.co/npm/aws-ec2-wrap/)
+
+[![Join the chat on Gitter](https://badges.gitter.im/ricardonunesdev/aws-ec2-wrap.svg)](https://gitter.im/ricardonunesdev/aws-ec2-wrap)
 
 [![Build Status](https://travis-ci.org/ricardonunesdev/aws-ec2-wrap.svg?branch=master)](https://travis-ci.org/ricardonunesdev/aws-ec2-wrap)
 [![Coverage Status](https://coveralls.io/repos/github/ricardonunesdev/aws-ec2-wrap/badge.svg?branch=master)](https://coveralls.io/github/ricardonunesdev/aws-ec2-wrap?branch=master)
 [![Dependency Status](https://gemnasium.com/badges/github.com/ricardonunesdev/aws-ec2-wrap.svg)](https://gemnasium.com/github.com/ricardonunesdev/aws-ec2-wrap)
 [![npm](https://img.shields.io/npm/v/aws-ec2-wrap.svg)](https://www.npmjs.com/package/aws-ec2-wrap)
-[![npm](https://img.shields.io/npm/l/aws-ec2-wrap.svg)](https://github.com/ricardonunesdev/aws-ec2-wrap/blob/master/LICENSE)
+[![license](https://img.shields.io/npm/l/aws-ec2-wrap.svg)](https://github.com/ricardonunesdev/aws-ec2-wrap/blob/master/LICENSE)
 
 Simplified AWS EC2 wrapper written in Node.js, allowing you to easily work with **AWS SDK for Javascript** without messing around with all the parameters and restrictions.
 
