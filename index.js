@@ -24,6 +24,13 @@ const init = (region) => {
 };
 
 /**
+ * Closes the current EC2 connection. Used for testing purposes.
+ */
+const close = () => {
+    EC2 = null;
+};
+
+/**
  * Get the currently selected AWS region.
  * @return {string} The name of the AWS region
  */
@@ -37,9 +44,9 @@ const getRegion = () => {
  * Get all instances.
  */
 const getAllInstances = () => {
-    validate.checkInitialized(EC2);
-
     return new Promise((resolve, reject) => {
+        validate.checkInitialized(EC2);
+
         let params = {
             DryRun: false
         };
@@ -337,6 +344,7 @@ const terminateInstance = (instanceId) => {
 
 module.exports = {
     init: init,
+    close: close,
     getRegion: getRegion,
 
     getAllInstances: getAllInstances,
