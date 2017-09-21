@@ -1,6 +1,6 @@
 {
   "name": "aws-ec2-wrap",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Simplified AWS EC2 wrapper written in Node.js",
   "keywords": [
     "nodejs",
