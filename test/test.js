@@ -40,18 +40,38 @@ describe('AWS EC2 Wrapper', () => {
     });
 
     describe('EC2.getRegion()', () => {
-        beforeEach(() => { EC2.init('eu-west-1'); });
+        before(() => { EC2.close(); });
+
+        it('should return error if not initialized', () => {
+            expect(() => { EC2.getRegion(); }).to.throw(EC2.errors.NOT_INITIALIZED);
+        });
 
         it('should return the correct region', () => {
+            EC2.init('eu-west-1');
             let res = EC2.getRegion();
+            expect(res).to.be.a('string');
             expect(res).to.be.equal('eu-west-1');
         });
     });
 
     describe('EC2.getAllInstances()', () => {
-        beforeEach(() => { EC2.init('eu-west-1'); });
+        before(() => { EC2.close(); });
+
+        it('should return error if not initialized', (done) => {
+            EC2.getAllInstances()
+                .then((res) => {
+                    done('Expected to fail');
+                })
+                .catch((error) => {
+                    expect(error).to.be.an('object');
+                    expect(error).to.have.property('message');
+                    expect(error.message).to.be.equal(EC2.errors.NOT_INITIALIZED);
+                    done();
+                });
+        });
 
         it('should return an array of instances', (done) => {
+            EC2.init('eu-west-1');
             EC2.getAllInstances()
                 .then((instances) => {
                     expect(instances).to.be.an('array');
