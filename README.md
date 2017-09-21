@@ -26,7 +26,6 @@ Always check this README file before upgrading to the latest version.
 
 ## Installation
 
-
 To install the package, run this command inside your project's folder:
 
 ```sh
@@ -439,7 +438,6 @@ There are many more AWS API methods that aren't wrapped by this module. I implem
 
 ## Roadmap
 
- - ~~Promisify validation and thrown errors~~
  - Handle valid but non-existing instance ids
  - Improve filtering on the getInstances methods (DRY)
  - Support for handling multiple instances on all methods
@@ -450,6 +448,7 @@ There are many more AWS API methods that aren't wrapped by this module. I implem
  - Replace most custom errors with AWS API error handling (empty values, invalid names, etc)
  - ~~Information on setting up credentials~~
  - ~~Additional feedback channels~~
+ - ~~Promisify validation and thrown errors~~
 
 ## License
 
