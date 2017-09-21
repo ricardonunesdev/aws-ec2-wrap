@@ -24,6 +24,14 @@ I'll ensure that `patch` (0.0.x) updates won't break your code, but `major` (x.0
 
 Always check this README file before upgrading to the latest version.
 
+## Latest code-breaking features
+
+### v0.1.x to v0.2.x
+
+ - Promisified validation (check the [Validation](#validation) section for more info)
+
+### [Changelog](https://github.com/ricardonunesdev/aws-ec2-wrap/blob/master/CHANGELOG.md)
+
 ## Installation
 
 To install the package, run this command inside your project's folder:
@@ -371,7 +379,7 @@ Please check for them in your code, to ensure you are providing the correct argu
 
 ### Handling Errors
 
-All errors, custom and AWS ones, are thrown internally inside each method's Promise, and so should be handled by the `.catch()` method in your code.
+All errors (custom and AWS ones) are now thrown inside each method's Promise (as they should be), and so they should be handled by a `.catch()` method in your code.
 
 Example:
 
