@@ -366,9 +366,33 @@ EC2.terminateInstance(instanceId)
 
 A number of validation checks are performed before the actual AWS API is called. These might throw custom errors that are provided in the module.
 
-These error types and messages are exposed in `EC2.errors` and are described in greater detail below.
+These custom error types and messages are exposed in `EC2.errors` and are described in greater detail in the [Custom Errors](#custom-errors) section below.
 
 Please check for them in your code, to ensure you are providing the correct arguments to all methods.
+
+### Handling Errors
+
+All errors, custom and AWS ones, are thrown internally inside each method's Promise, and so should be handled by the `.catch()` method in your code.
+
+Example:
+
+```js
+EC2.getInstanceById(instanceId)
+    .then((instance) => {
+        console.log(instance);
+    })
+    .catch((error) => {
+        console.error(error); // Your error handling code here
+    });
+```
+
+Where the `error` object will either be one of the custom errors or a full blown AWS API error.
+
+Take notice that a custom error will provide its identification in the `error.message` property only, while an AWS API error will provide multiple properties inside the object, including the `error.code` and the `error.message`.
+
+For example, a malformed `instance id` will throw an AWS API error with `error.code = 'InvalidInstanceID.Malformed'`. Attempting to call any method without initializing the EC2 connection with the [init](#init) method will throw a custom error with `error.message = EC2.errors.NOT_INITIALIZED = 'EC2 not initialized. Please call EC2.init() with a valid region.'`.
+
+## Custom Errors
 
 ```js
 {
@@ -415,7 +439,7 @@ There are many more AWS API methods that aren't wrapped by this module. I implem
 
 ## Roadmap
 
- - Promisify validation and thrown errors
+ - ~~Promisify validation and thrown errors~~
  - Handle valid but non-existing instance ids
  - Improve filtering on the getInstances methods (DRY)
  - Support for handling multiple instances on all methods
