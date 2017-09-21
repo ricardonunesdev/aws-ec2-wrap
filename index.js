@@ -74,10 +74,10 @@ const getAllInstances = () => {
  * @param {string} state The state of the instances
  */
 const getInstancesByStatus = (status) => {
-    validate.checkInitialized(EC2);
-    validate.checkValidState(status);
-
     return new Promise((resolve, reject) => {
+        validate.checkInitialized(EC2);
+        validate.checkValidState(status);
+
         let params = {
             DryRun: false,
             Filters: [{ Name: 'instance-state-name', Values: [status] }]
@@ -106,10 +106,10 @@ const getInstancesByStatus = (status) => {
  * @param {string} ipAddress The ip address of the instance
  */
 const getInstanceByIpAddress = (ipAddress) => {
-    validate.checkInitialized(EC2);
-    validate.checkValidIpAddress(ipAddress);
-
     return new Promise((resolve, reject) => {
+        validate.checkInitialized(EC2);
+        validate.checkValidIpAddress(ipAddress);
+
         let params = {
             DryRun: false,
             Filters: [{ Name: 'ip-address', Values: [ipAddress] }]
@@ -138,10 +138,10 @@ const getInstanceByIpAddress = (ipAddress) => {
  * @param {string} instanceId The id of the instance
  */
 const getInstanceById = (instanceId) => {
-    validate.checkInitialized(EC2);
-    validate.checkNotEmpty(instanceId);
-
     return new Promise((resolve, reject) => {
+        validate.checkInitialized(EC2);
+        validate.checkNotEmpty(instanceId);
+
         let params = {
             DryRun: false,
             InstanceIds: [instanceId]
@@ -164,10 +164,10 @@ const getInstanceById = (instanceId) => {
  * @param {string} instanceId The id of the instance
  */
 const getInstanceStatus = (instanceId) => {
-    validate.checkInitialized(EC2);
-    validate.checkNotEmpty(instanceId);
-
     return new Promise(function (resolve, reject) {
+        validate.checkInitialized(EC2);
+        validate.checkNotEmpty(instanceId);
+
         let instanceState;
         let params = {
             DryRun: false,
@@ -192,10 +192,10 @@ const getInstanceStatus = (instanceId) => {
  * @param {string} instanceId The id of the instance
  */
 const getInstanceIpAddress = (instanceId) => {
-    validate.checkInitialized(EC2);
-    validate.checkNotEmpty(instanceId);
-
     return new Promise(function (resolve, reject) {
+        validate.checkInitialized(EC2);
+        validate.checkNotEmpty(instanceId);
+
         getInstanceById(instanceId)
             .then((instance) => {
                 return resolve(instance.PublicIpAddress);
@@ -213,14 +213,14 @@ const getInstanceIpAddress = (instanceId) => {
  * @param {string} tagName The name tag you want to apply to the instance
  */
 const launchInstance = (imageId, instanceType, keyName, securityGroup, tagName) => {
-    validate.checkInitialized(EC2);
-    validate.checkNotEmpty(imageId);
-    validate.checkNotEmpty(instanceType);
-    validate.checkNotEmpty(keyName);
-    validate.checkNotEmpty(securityGroup);
-    validate.checkNotEmpty(tagName);
-
     return new Promise((resolve, reject) => {
+        validate.checkInitialized(EC2);
+        validate.checkNotEmpty(imageId);
+        validate.checkNotEmpty(instanceType);
+        validate.checkNotEmpty(keyName);
+        validate.checkNotEmpty(securityGroup);
+        validate.checkNotEmpty(tagName);
+
         let params = {
             ImageId: imageId,
             InstanceType: instanceType,
@@ -258,10 +258,10 @@ const launchInstance = (imageId, instanceType, keyName, securityGroup, tagName) 
  * @param {string} instanceId The id of the instance to stop
  */
 const stopInstance = (instanceId) => {
-    validate.checkInitialized(EC2);
-    validate.checkNotEmpty(instanceId);
-
     return new Promise((resolve, reject) => {
+        validate.checkInitialized(EC2);
+        validate.checkNotEmpty(instanceId);
+
         let params = {
             DryRun: false,
             InstanceIds: [instanceId]
@@ -287,10 +287,10 @@ const stopInstance = (instanceId) => {
  * @param {string} instanceId The id of the instance to start
  */
 const startInstance = (instanceId) => {
-    validate.checkInitialized(EC2);
-    validate.checkNotEmpty(instanceId);
-
     return new Promise((resolve, reject) => {
+        validate.checkInitialized(EC2);
+        validate.checkNotEmpty(instanceId);
+
         let params = {
             DryRun: false,
             InstanceIds: [instanceId]
@@ -316,10 +316,10 @@ const startInstance = (instanceId) => {
  * @param {string} instanceId The id of the instance to terminate
  */
 const terminateInstance = (instanceId) => {
-    validate.checkInitialized(EC2);
-    validate.checkNotEmpty(instanceId);
-
     return new Promise((resolve, reject) => {
+        validate.checkInitialized(EC2);
+        validate.checkNotEmpty(instanceId);
+
         let params = {
             DryRun: false,
             InstanceIds: [instanceId]
