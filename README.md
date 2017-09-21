@@ -423,6 +423,7 @@ There are many more AWS API methods that aren't wrapped by this module. I implem
  - Add more methods (volumes, elastic ips, security groups, images, etc)
  - Support for handling large number of instances (above API limit)
  - Provide example for custom error handling
+ - Replace most custom errors with AWS API error handling (empty values, invalid names, etc)
  - ~~Information on setting up credentials~~
  - ~~Additional feedback channels~~
 
