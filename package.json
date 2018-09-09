@@ -23,14 +23,14 @@
     "cover": "node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- -R spec -t 120000 test/*"
   },
   "dependencies": {
-    "aws-sdk": "^2.123.0",
-    "bluebird": "^3.5.0",
+    "aws-sdk": "^2.311.0",
+    "bluebird": "^3.5.2",
     "dotenv": "^4.0.0",
     "is-ip": "^2.0.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",
-    "coveralls": "^3.0.0",
+    "coveralls": "^3.0.2",
     "istanbul": "^0.4.5",
     "mocha": "^3.5.3"
   },
